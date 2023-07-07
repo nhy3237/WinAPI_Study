@@ -169,10 +169,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             ptMousePos.y -= 20;
             InvalidateRgn(hWnd, NULL, TRUE);
         }*/
+        
 
-        for (auto e : object)
+        //for (auto e : object)
+        //{
+        //    e->Update(&rectView);
+
+        for(int i =0;i<object.size();i++)
         {
-            e->Update(&rectView);
+            object[i]->Update(&rectView);
+
+            for (int j = i; j < object.size(); j++)
+            {
+                object[i]->Collision(object[i]->getR(), object[j]->getR());
+            }
 
             InvalidateRgn(hWnd, NULL, TRUE);
         }

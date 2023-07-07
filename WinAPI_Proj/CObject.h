@@ -11,13 +11,14 @@ protected:
 	POINT center;
 	double speed;
 	double Xdirection, Ydirection;
-	//vector<double> vect;
+
 	int type;
 
 public:
 	virtual void Update(RECT *rectView) = 0;
 	virtual void Draw(HDC hdc, RECT* rectView) = 0;
-	virtual BOOL Collision() = 0;
+	virtual BOOL Collision(double r1, double r2) = 0;
+	virtual double getR() = 0;
 };
 
 class CCircle :public CObject
@@ -31,7 +32,8 @@ public:
 	~CCircle();
 	virtual void Update(RECT* rectView) override;
 	virtual void Draw(HDC hdc, RECT* rectView) override;
-	virtual BOOL Collision() override;
+	virtual BOOL Collision(double r1, double r2) override;
+	virtual double getR() override;
 };
 
 class CRect :public CObject
@@ -45,7 +47,8 @@ public:
 	~CRect();
 	virtual void Update(RECT* rectView) override;
 	virtual void Draw(HDC hdc, RECT* rectView) override;
-	virtual BOOL Collision() override;
+	virtual BOOL Collision(double r1, double r2) override;
+	virtual double getR() override;
 };
 
 class CStar :public CObject
@@ -59,7 +62,8 @@ public:
 	~CStar();
 	virtual void Update(RECT* rectView) override;
 	virtual void Draw(HDC hdc, RECT* rectView) override;
-	virtual BOOL Collision() override;
+	virtual BOOL Collision(double r1, double r2) override;
+	virtual double getR() override;
 };
 //class CObject
 //{

@@ -53,6 +53,12 @@
     <ClCompile Include="230703.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="230705.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="230707.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="WinAPI_Proj.rc">
@@ -64,6 +70,9 @@
       <Filter>리소스 파일</Filter>
     </Image>
     <Image Include="WinAPI_Proj.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="image\백현.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>

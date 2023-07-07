@@ -144,8 +144,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="230703.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="230705.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="230707.cpp" />
     <ClCompile Include="CObject.cpp" />
     <ClCompile Include="T230629.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -158,6 +162,7 @@
     <ResourceCompile Include="WinAPI_Proj.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="image\백현.bmp" />
     <Image Include="small.ico" />
     <Image Include="WinAPI_Proj.ico" />
   </ItemGroup>

@@ -1,8 +1,10 @@
 #include "CObject.h"
 #include <ctime>
+#include <vector>
 #define PI 3.141592
 #define degreeToRadian(degree) ((degree) * PI / 180)
 
+// 원
 CCircle::CCircle()
 {   
     center.x = 0;
@@ -63,11 +65,18 @@ void CCircle::Draw(HDC hdc, RECT* rectView)
     Ellipse(hdc, center.x - r, center.y - r, center.x + r, center.y + r);
 }
 
-BOOL CCircle::Collision()
+BOOL CCircle::Collision(double r1, double r2)
 {
+    
     return 0;
 }
 
+double CCircle::getR()
+{
+    return r;
+}
+
+// 사각형
 CRect::CRect()
 {
     center.x = 0;
@@ -81,7 +90,6 @@ CRect::CRect()
 
 CRect::CRect(POINT center, double r)
 {
-
     this->center = center;
     this->r = r;
     this->speed = 100;
@@ -106,11 +114,17 @@ void CRect::Draw(HDC hdc, RECT* rectView)
 {
 }
 
-BOOL CRect::Collision()
+BOOL CRect::Collision(double r1, double r2)
 {
     return 0;
 }
 
+double CRect::getR()
+{
+    return 0.0;
+}
+
+// 별
 CStar::CStar()
 {
 }
@@ -131,7 +145,12 @@ void CStar::Draw(HDC hdc, RECT* rectView)
 {
 }
 
-BOOL CStar::Collision()
+BOOL CStar::Collision(double r1, double r2)
 {
     return 0;
+}
+
+double CStar::getR()
+{
+    return 0.0;
 }

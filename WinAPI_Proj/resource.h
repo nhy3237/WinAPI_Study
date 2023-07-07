@@ -3,6 +3,7 @@
 // WinAPI_Proj.rc에서 사용되고 있습니다.
 //
 #define IDC_MYICON                      2
+#define IDC_START                       2
 #define IDD_WINAPIPROJ_DIALOG           102
 #define IDS_APP_TITLE                   103
 #define IDD_ABOUTBOX                    103
@@ -13,10 +14,15 @@
 #define IDC_WINAPIPROJ                  109
 #define IDR_MAINFRAME                   128
 #define IDR_MENU1                       129
+#define IDB_BITMAP1                     130
+#define IDD_DIALOG1                     131
+#define IDC_BUTTON_PRINT                1043
+#define IDC_BUTTON_END                  1044
+#define ID_EXIT                         1045
+#define IDC_TEXT                        1046
+#define IDC_PAUSE                       1048
 #define ID_MENUTEST_32771               32771
 #define ID_DRAW_CIRCLE                  32779
-#define ID_DRAW_RECTANGLE               32780
-#define ID_DRAW_START                   32781
 #define ID_DRAW_STAR                    32782
 #define ID_DRAW_RECT                    32783
 #define ID_FILEOPEN                     32785
@@ -28,9 +34,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        130
+#define _APS_NEXT_RESOURCE_VALUE        132
 #define _APS_NEXT_COMMAND_VALUE         32788
-#define _APS_NEXT_CONTROL_VALUE         1000
+#define _APS_NEXT_CONTROL_VALUE         1047
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif
