@@ -20,7 +20,26 @@
 #define IDC_BUTTON_END                  1044
 #define ID_EXIT                         1045
 #define IDC_TEXT                        1046
+#define IDC_EDIT_INPUT                  1047
 #define IDC_PAUSE                       1048
+#define IDC_BUTTON_COPY                 1049
+#define IDC_BUTTON_CLEAR                1050
+#define IDC_EDIT_COPY                   1051
+#define IDC_CHECK_READING               1052
+#define IDC_RADIO_FEMALE                1053
+#define IDC_CHECK_MUSIC                 1054
+#define IDC_CHECK_GAME                  1055
+#define IDC_RADIO_MALE                  1056
+#define IDC_EDIT_OUTPUT                 1057
+#define IDC_BUTTON_OUTPUT               1058
+#define IDC_COMBO_LIST                  1060
+#define IDC_BUTTON_INSERT               1061
+#define IDC_BUTTON_DELETE               1062
+#define IDC_EDIT_NAME                   1063
+#define IDC_LIST_NAME                   1064
+#define IDC_BUTTON_DELETE2              1065
+#define IDC_LIST_MEMBER                 1068
+#define IDC_BUTTON_INSERT_MEMBER        1069
 #define ID_MENUTEST_32771               32771
 #define ID_DRAW_CIRCLE                  32779
 #define ID_DRAW_STAR                    32782
@@ -36,7 +55,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        132
 #define _APS_NEXT_COMMAND_VALUE         32788
-#define _APS_NEXT_CONTROL_VALUE         1047
+#define _APS_NEXT_CONTROL_VALUE         1070
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif

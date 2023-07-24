@@ -15,6 +15,11 @@
 #include "WinAPI_Proj.h"
 #include <commdlg.h>
 
+// 0714
+HWND ChildWnd[2];
+LRESULT CALLBACK    ChildWndProc1(HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK    ChildWndProc2(HWND, UINT, WPARAM, LPARAM);
+
 //>> :
 #pragma comment(lib, "msimg32.lib")
 
@@ -54,6 +59,21 @@ void DrawRectText(HDC hdc);
 void Update();
 void Render();
 
+
+// >> : GDI+ -230710
+#include <objidl.h>
+#include <gdiplus.h>
+#pragma comment(lib, "Gdiplus.lib")
+using namespace Gdiplus;
+
+ULONG_PTR g_GdiToken;
+
+void Gdi_Init();
+void Gdi_Draw(HDC hdc);
+void Gdi_End();
+
+// << :
+
 VOID CALLBACK AniProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime);
 // << : FUNC
 
@@ -92,6 +112,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDC_WINAPIPROJ, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
 
+    Gdi_Init();
+
     // 애플리케이션 초기화를 수행합니다:
     if (!InitInstance(hInstance, nCmdShow))
     {
@@ -111,6 +133,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             DispatchMessage(&msg);
         }
     }
+
+    Gdi_End();
 
     return (int)msg.wParam;
 }
@@ -139,7 +163,21 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.lpszClassName = szWindowClass;
     wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
-    return RegisterClassExW(&wcex);
+    // 0714
+    RegisterClassExW(&wcex);
+
+    // split window 1
+    wcex.lpfnWndProc = ChildWndProc1;
+    wcex.lpszMenuName = NULL;
+    wcex.lpszClassName = _T("Child Window Class 1");
+    RegisterClassExW(&wcex); // 윈도우 등록
+    // split window 2
+    wcex.lpfnWndProc = ChildWndProc2;
+    wcex.lpszMenuName = NULL;
+    wcex.lpszClassName = _T("Child Window Class 2");
+    RegisterClassExW(&wcex); // 윈도우 등록
+
+    return NULL;
 }
 
 //
@@ -194,8 +232,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_CREATE:
     {
         CreateBitmap();
-        SetTimer(hWnd, timer_ID_2, 20, AniProc);
+        //SetTimer(hWnd, timer_ID_2, 20, AniProc);
         GetClientRect(hWnd, &rectView);
+
+        // >> : split window
+        {
+            ChildWnd[0] = CreateWindowEx(WS_EX_CLIENTEDGE, _T("Child Window Class 1"), NULL, WS_CHILD | WS_VISIBLE,
+                0, 0, rectView.right, rectView.bottom / 2 - 1, hWnd, NULL, hInst, NULL);
+            ChildWnd[1] = CreateWindowEx(WS_EX_CLIENTEDGE, _T("Child Window Class 2"), NULL, WS_CHILD | WS_VISIBLE,
+                0, rectView.bottom / 2 + 1, rectView.right, rectView.bottom / 2 - 1, hWnd, NULL, hInst, NULL);
+        }
     }
         break;
 
@@ -219,18 +265,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
     }
     break;
-    case WM_PAINT:
+    /*case WM_PAINT:
     {
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hWnd, &ps);
+
         //DrawBitmap(hWnd, hdc);
         DrawBitmapDoubleBuffering(hWnd, hdc);
         DrawRectText(hdc);
         EndPaint(hWnd, &ps);
     }
-    break;
+    break;*/
     case WM_DESTROY:
-        KillTimer(hWnd, timer_ID_2);
+        //KillTimer(hWnd, timer_ID_2);
         DeleteBitmap();
         PostQuitMessage(0);
         break;
@@ -515,6 +562,8 @@ void DrawBitmapDoubleBuffering(HWND hWnd, HDC hdc)
         DeleteDC(hMemDC2);
     }
     
+    Gdi_Draw(hMemDC); // << : gdi+
+    
     // >> : hdc에 그려주기
     //BitBlt(hdc, 0, 0, rectView.right, rectView.bottom, hMemDC, 0, 0, SRCCOPY);
     TransparentBlt(hdc, 0, 0, rectView.right, rectView.bottom,
@@ -523,4 +572,196 @@ void DrawBitmapDoubleBuffering(HWND hWnd, HDC hdc)
 
     SelectObject(hMemDC, hOldBitmap);
     DeleteDC(hMemDC);
+}
+
+void Gdi_Init()
+{
+    GdiplusStartupInput gpsi;
+    GdiplusStartup(&g_GdiToken, &gpsi, NULL);
+}
+
+void Gdi_Draw(HDC hdc)
+{
+    Graphics graphics(hdc);
+
+    // : text
+    SolidBrush brush(Color(255, 255, 0, 0));
+    FontFamily fontFamily(L"Times New Roman");
+    Font font(&fontFamily, 24, FontStyleRegular, UnitPixel);
+    PointF pointF(10.0f, 20.0f);
+    graphics.DrawString(L"Hello GDI+!!", -1, &font, pointF, &brush);
+
+    // : line
+    Pen pen(Color(128, 255, 0, 0));
+    graphics.DrawLine(&pen, 0, 0, 200, 100);
+
+    // : image
+    Image img((WCHAR*)L"image/sigong.png");
+    int w = img.GetWidth();
+    int h = img.GetHeight();
+    graphics.DrawImage(&img, 300, 100, w, h);
+
+    // : ani
+    Image img2((WCHAR*)L"image/zero_run.png");
+    w = img2.GetWidth() / SPRITE_FRAME_COUNT_X;
+    h = img2.GetHeight() / SPRITE_FRAME_COUNT_Y;
+    int xStart = curframe * w;
+    int yStart = 0;
+
+    ImageAttributes imgAttr0;
+    imgAttr0.SetColorKey(Color(245, 0, 245), Color(255, 10, 255));
+    graphics.DrawImage(&img2, Rect(450, 100, w, h), xStart, yStart, w, h, UnitPixel, &imgAttr0);
+
+    // >> : alpha rect
+    brush.SetColor(Color(128, 255, 0, 0));
+    graphics.FillRectangle(&brush, 100, 100, 200, 300);
+
+    // >> : ratation
+    Image* pImg = nullptr;
+    pImg = Image::FromFile((WCHAR*)L"image/sigong.png");
+    int xPos = 400;
+    int yPos = 200;
+    if (pImg)
+    {
+        w = pImg->GetWidth();
+        h = pImg->GetHeight();
+
+        Gdiplus::Matrix mat;
+        static int rot = 0;
+        mat.RotateAt((rot % 360), Gdiplus::PointF(xPos + (float)(w / 2), yPos + (float)(h / 2)));
+        graphics.SetTransform(&mat);
+        graphics.DrawImage(pImg, xPos, yPos, w, h);
+        rot += 10;
+
+        mat.Reset();
+        graphics.SetTransform(&mat);
+    }
+    
+    ImageAttributes imgAttr;
+    imgAttr.SetColorKey(Color(240, 0, 240), Color(255, 10, 255));
+    xPos = 500;
+    graphics.DrawImage(pImg, Rect(xPos, yPos, w, h), 0, 0, w, h, UnitPoint, &imgAttr);
+    graphics.DrawImage(pImg, xPos + 50, yPos, w, h);
+
+    if (pImg)
+    {
+        REAL transparency = 0.5f;
+        ColorMatrix colorMatrix =
+        {
+            1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 0.0f, transparency, 0.0f,
+            0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+        };
+
+        imgAttr.SetColorMatrix(&colorMatrix);
+        xPos = 600;
+        graphics.DrawImage(pImg, Rect(xPos, yPos, w, h), 0, 0, w, h, UnitPoint, &imgAttr);
+
+        ColorMatrix grayMatrix =
+        {
+            0.3f, 0.3f, 0.3f, 0.0f, 0.0f,
+            0.6f, 0.6f, 0.6f, 0.0f, 0.0f,
+            0.1f, 0.1f, 0.1f, 0.0f, 0.0f,
+            0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+            0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+        };
+        imgAttr.SetColorMatrix(&grayMatrix);
+        xPos = 700;
+        graphics.DrawImage(pImg, Rect(xPos, yPos, w, h), 0, 0, w, h, UnitPoint, &imgAttr);
+
+        xPos = 800;
+        pImg->RotateFlip(RotateNoneFlipX);
+        graphics.DrawImage(pImg, Rect(xPos, yPos, w, h), 0, 0, w, h, UnitPoint, &imgAttr);
+
+        delete pImg;
+    }
+}
+
+void Gdi_End()
+{
+    GdiplusShutdown(g_GdiToken);
+}
+
+#define IDC_CHILD1_BTN 2000
+
+LRESULT CALLBACK ChildWndProc1(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    HWND hBtn;
+    static bool bToggle = false;
+
+    switch (message)
+    {
+    case WM_CREATE:
+        SetTimer(hWnd, 11, 30, AniProc);
+
+        hBtn = CreateWindow(_T("button"), _T("OK"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+            200, 10, 100, 30, hWnd, (HMENU)IDC_CHILD1_BTN, hInst, NULL);
+
+        break;
+    case WM_PAINT:
+    {
+        HDC hdc;
+        PAINTSTRUCT ps;
+
+        hdc = BeginPaint(hWnd, &ps);
+
+        DrawBitmapDoubleBuffering(hWnd, hdc);
+        if (bToggle)
+            TextOut(hdc, 200, 50, _T("Button Clicked"), 14);
+
+        EndPaint(hWnd, &ps);
+    }
+    break;
+    case WM_COMMAND:
+        switch (LOWORD(wParam))
+        {
+        case IDC_CHILD1_BTN:
+            bToggle = !bToggle;
+            break;
+        }
+        break;
+    case WM_DESTROY:
+        KillTimer(hWnd, 11);
+        break;
+    }
+    return DefWindowProc(hWnd, message, wParam, lParam);
+}
+
+LRESULT CALLBACK ChildWndProc2(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    static POINT ptMouse;
+
+    switch (message)
+    {
+    case WM_CREATE:
+        break;
+    case WM_COMMAND:
+        break;
+    case WM_MOUSEMOVE:
+        GetCursorPos(&ptMouse);
+        InvalidateRect(hWnd, NULL, FALSE);
+        break;
+    case WM_PAINT:
+    {
+        PAINTSTRUCT ps;
+
+        HDC hdc = BeginPaint(hWnd, &ps);
+        TCHAR str[128];
+        wsprintf(str, TEXT("WORLD POSITION : (%04d, %04d)"), ptMouse.x, ptMouse.y);
+        TextOut(hdc, 10, 30, str, lstrlen(str));
+
+        ScreenToClient(hWnd, &ptMouse);
+
+        wsprintf(str, TEXT("LOCAL POSITION : (%04d, %04d)"), ptMouse.x, ptMouse.y);
+        TextOut(hdc, 10, 50, str, lstrlen(str));
+
+        EndPaint(hWnd, &ps);
+    }
+    break;
+    case WM_DESTROY:
+        break;
+    }
+    return DefWindowProc(hWnd, message, wParam, lParam);
 }

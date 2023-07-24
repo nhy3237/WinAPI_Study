@@ -5,6 +5,8 @@
 
 #include "framework.h"
 #include "WinAPI_Proj.h"
+#include <CommCtrl.h>
+
 
 #define MAX_LOADSTRING 100
 
@@ -14,6 +16,10 @@ WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
 
 BOOL CALLBACK Dialog_Test1_Proc(HWND hDlg, UINT iMsg, WPARAM wParam, LPARAM lParam);
+HWND hModalessDlg;
+
+void MakeColumn(HWND hDlg);
+void InsertData(HWND hDlg);
 
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -139,7 +145,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             case WM_COMMAND:
             {
             case ID_DRAW_RECT:
-                DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, Dialog_Test1_Proc);
+               
+                //DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, Dialog_Test1_Proc);
+
+                hModalessDlg = CreateDialog(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, Dialog_Test1_Proc);
+                ShowWindow(hModalessDlg, SW_SHOW);
                 break;
 
             case IDM_ABOUT:
@@ -191,20 +201,126 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     return (INT_PTR)FALSE;
 }
 
+
+
 BOOL CALLBACK Dialog_Test1_Proc(HWND hDlg, UINT iMsg, WPARAM wParam, LPARAM lParam)
 {
+    static int Check[3], Radio;
+    TCHAR hobby[][30] = { _T("독서"), _T("음악감상"), _T("게임") };
+    TCHAR sex[][30] = { _T("여성"), _T("남성") };
+    TCHAR output[200];
+
+    // 230712
+    static HWND hCombo;
+    static int selection;
+    TCHAR name[20];
+    
+    static HWND hList;
+    static int selectionList;
+
     switch (iMsg)
     {
     case WM_INITDIALOG:
     {
         HWND hBtn = GetDlgItem(hDlg, IDC_PAUSE);
         EnableWindow(hBtn, FALSE);
+
+        CheckRadioButton(hDlg, IDC_RADIO_FEMALE, IDC_RADIO_MALE, IDC_RADIO_FEMALE);
+
+        hCombo = GetDlgItem(hDlg, IDC_COMBO_LIST);
+        hList = GetDlgItem(hDlg, IDC_LIST_NAME);
+
+        MakeColumn(hDlg); 
     }
         return 1;
     
     case WM_COMMAND:
         switch (LOWORD(wParam))
         {
+            //230713
+        case IDC_BUTTON_INSERT_MEMBER:
+            InsertData(hDlg);
+            break;
+            //230712
+        case IDC_BUTTON_INSERT:
+            GetDlgItemText(hDlg, IDC_EDIT_NAME, name, 20);
+            if (_tcscmp(name, _T("")))
+            {
+                SendMessage(hCombo, CB_ADDSTRING, 0, (LPARAM)name);
+                SendMessage(hList, LB_ADDSTRING, 0, (LPARAM)name);
+            }
+            break;
+
+        case IDC_BUTTON_DELETE:
+            SendMessage(hCombo, CB_DELETESTRING, selection, 0);
+            break;
+
+        case IDC_COMBO_LIST:
+            if (HIWORD(wParam) == CBN_SELCHANGE)
+            {
+                selection = SendMessage(hCombo, CB_GETCURSEL, 0, 0);
+            }
+            break;
+
+        case IDC_BUTTON_DELETE2:
+            SendMessage(hList, LB_DELETESTRING, selectionList, 0);
+            break;
+
+        case IDC_LIST_NAME:
+            if (HIWORD(wParam) == LBN_SELCHANGE)
+            {
+                selectionList = SendMessage(hList, LB_GETCURSEL, 0, 0);
+            }
+            break;
+
+            //230710
+        case IDC_CHECK_READING:
+            Check[0] = 1 - Check[0];
+            break;
+            
+        case IDC_CHECK_MUSIC:
+            Check[1] = 1 - Check[1];
+            break;
+
+        case IDC_CHECK_GAME:
+            Check[2] = 1 - Check[2];
+            break;
+
+        case IDC_RADIO_FEMALE:
+            Radio = 0;
+            break;
+
+        case IDC_RADIO_MALE:
+            Radio = 1;
+            break;
+
+        case IDC_BUTTON_OUTPUT:
+            _stprintf_s(output, _T("선택한 취미는  %s %s %s 입니다. \r\n")
+                _T("선택한 성별은 %s 입니다."),
+
+            Check[0] ? hobby[0] : _T(""),
+                Check[1] ? hobby[1] : _T(""),
+                Check[2] ? hobby[2] : _T(""),
+                sex[Radio]);
+
+            SetDlgItemText(hDlg, IDC_EDIT_OUTPUT, output);
+            break;
+
+        case IDC_BUTTON_COPY :
+        {
+            TCHAR str[100];
+            GetDlgItemText(hDlg, IDC_EDIT_INPUT, str, 100);
+            SetDlgItemText(hDlg, IDC_EDIT_COPY, str);
+        }
+            break;
+
+        case IDC_BUTTON_CLEAR:
+            SetDlgItemText(hDlg, IDC_EDIT_INPUT, _T(""));
+            SetDlgItemText(hDlg, IDC_EDIT_COPY, _T(""));
+            break;
+
+
+
         case IDC_START:
         {
             HDC hdc = GetDC(hDlg);
@@ -242,13 +358,53 @@ BOOL CALLBACK Dialog_Test1_Proc(HWND hDlg, UINT iMsg, WPARAM wParam, LPARAM lPar
             break;
 
         case IDOK:
-            EndDialog(hDlg, 0);
+            //EndDialog(hDlg, 0);
+            DestroyWindow(hDlg);
+            hDlg = NULL;
             break;
         case ID_EXIT:
-            EndDialog(hDlg, 0);
+            //EndDialog(hDlg, 0);
+            DestroyWindow(hDlg);
+            hDlg = NULL;
             break;
         }
         break;
     }
     return 0;
+}
+
+void MakeColumn(HWND hDlg)
+{
+    LPCTSTR name[2] = { _T("이름"), _T("전화번호") };
+    LVCOLUMN lvCol = { 0, };
+    HWND hList;
+    int i;
+    hList = GetDlgItem(hDlg, IDC_LIST_MEMBER);
+    lvCol.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
+    lvCol.fmt = LVCFMT_LEFT;
+
+    for (int i = 0; i < 2; i++)
+    {
+        lvCol.cx = 90;
+        lvCol.pszText = (LPWSTR)name[i];
+        SendMessage(hList, LVM_INSERTCOLUMN, (WPARAM)i, (LPARAM)&lvCol);
+    }
+}
+
+void InsertData(HWND hDlg)
+{
+    LVITEM item;
+    HWND hList;
+    LPCTSTR name[20] = { _T("김철수"), _T("김영희") };
+    LPCTSTR phone[20] = { _T("010-1111-3333"), _T("010-2222-4444") };
+    hList = GetDlgItem(hDlg, IDC_LIST_MEMBER);
+    for (int i = 0; i < 2; i++)
+    {
+        item.mask = LVIF_TEXT;
+        item.iItem = i;
+        item.iSubItem = 0;
+        item.pszText = (LPWSTR)name[i];
+        ListView_InsertItem(hList, &item);
+        ListView_SetItemText(hList, i, 1, (LPWSTR)phone[i]);
+    }
 }
