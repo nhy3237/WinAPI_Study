@@ -1,0 +1,20 @@
+﻿  cMainGame.cpp
+D:\2023_nhy\WinAPI\API3D\API3D\cMainGame.cpp(145,54): warning C4244: '인수': 'LONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2023_nhy\WinAPI\API3D\API3D\cMainGame.cpp(145,44): warning C4244: '인수': 'LONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2023_nhy\WinAPI\API3D\API3D\cMainGame.cpp(174,29): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2023_nhy\WinAPI\API3D\API3D\cMainGame.cpp(174,23): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2023_nhy\WinAPI\API3D\API3D\cMainGame.cpp(175,27): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2023_nhy\WinAPI\API3D\API3D\cMainGame.cpp(175,21): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2023_nhy\WinAPI\API3D\API3D\cMainGame.cpp(176,27): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2023_nhy\WinAPI\API3D\API3D\cMainGame.cpp(176,21): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2023_nhy\WinAPI\API3D\API3D\cMainGame.cpp(177,27): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2023_nhy\WinAPI\API3D\API3D\cMainGame.cpp(177,21): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2023_nhy\WinAPI\API3D\API3D\cMainGame.cpp(282,29): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2023_nhy\WinAPI\API3D\API3D\cMainGame.cpp(282,23): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2023_nhy\WinAPI\API3D\API3D\cMainGame.cpp(283,27): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2023_nhy\WinAPI\API3D\API3D\cMainGame.cpp(283,21): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2023_nhy\WinAPI\API3D\API3D\cMainGame.cpp(288,25): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2023_nhy\WinAPI\API3D\API3D\cMainGame.cpp(288,20): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2023_nhy\WinAPI\API3D\API3D\cMainGame.cpp(292,25): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2023_nhy\WinAPI\API3D\API3D\cMainGame.cpp(292,20): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  API3D.vcxproj -> D:\2023_nhy\WinAPI\API3D\Debug\API3D.exe
