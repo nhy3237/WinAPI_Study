@@ -274,6 +274,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         DrawBitmapDoubleBuffering(hWnd, hdc);
         DrawRectText(hdc);
         EndPaint(hWnd, &ps);
+ 
     }
     break;*/
     case WM_DESTROY:
