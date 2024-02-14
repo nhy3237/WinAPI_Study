@@ -1,0 +1,6 @@
+﻿  AstarA.cpp
+D:\2023_nhy\WinAPI\AstarAlgorithm\AstarA\AstarA.cpp(193,74): warning C4267: '=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2023_nhy\WinAPI\AstarAlgorithm\AstarA\AstarA.cpp(250,90): warning C4267: '=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2023_nhy\WinAPI\AstarAlgorithm\AstarA\AstarA.cpp(257,13): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2023_nhy\WinAPI\AstarAlgorithm\AstarA\AstarA.cpp(268,102): warning C4267: '=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  AstarA.vcxproj -> D:\2023_nhy\WinAPI\AstarAlgorithm\x64\Debug\AstarA.exe
