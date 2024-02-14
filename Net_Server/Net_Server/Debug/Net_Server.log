@@ -1,0 +1,3 @@
+﻿  Net_Server.cpp
+D:\2023_nhy\WinAPI\Net_Server\Net_Server\Net_Server.cpp(33,20): warning C4101: 'i' :참조되지 않은 지역 변수입니다.
+  Net_Server.vcxproj -> D:\2023_nhy\WinAPI\Net_Server\Debug\Net_Server.exe
